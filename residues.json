@@ -1,0 +1,36 @@
+{
+  "d": [
+    "ARG",
+    "ASN",
+    "GLN",
+    "HIS",
+    "LYS",
+    "SER",
+    "THR",
+    "TRP",
+    "TYR"
+  ],
+  "a": [
+    "ASN",
+    "ASP",
+    "GLN",
+    "GLU",
+    "HIS",
+    "SER",
+    "THR",
+    "TYR"
+  ],
+  "hp": [
+    "ALA",
+    "CYS",
+    "ILE",
+    "LEU",
+    "MET",
+    "PHE",
+    "TRP",
+    "VAL"
+  ],
+  "cys": [
+    "CYS"
+  ]
+}

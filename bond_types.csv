@@ -1,0 +1,7 @@
+name,start_atom,end_atom,start_amino_type,end_amino_type,single_atom,use_ca,dist_min,dist_max,inner_color,outer_color
+disulph,S,S,cys,cys,1,0,1.8,3.0,0xAAAAAA,grey
+hydrogen,H,O,d,a,1,0,1.5,3.38,red,blue
+hydrogen,O,H,a,d,1,0,1.5,3.38,lightblue,blue
+hydrogen,H,N,d,a,1,0,1.5,3.38,lightblue,blue
+hydrogen,N,H,a,d,1,0,1.5,3.38,lightblue,blue
+hydrophobic,,,hp,hp,0,1,3.8,9.5,red,red
