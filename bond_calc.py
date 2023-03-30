@@ -22,8 +22,9 @@ class Bond:
 
 
 def get_sec_structs(values):
+    print(values)
     for line in values:
-        if line['sec_letter'] in ('T', 'B', 'G'):
+        if line.get('sec_letter', 'T') in ('T', 'B', 'G'):
             line['sec_letter'] = 'C'
     structs = []
     curr_struct = None
@@ -77,7 +78,7 @@ def find_bonds(
     if ssec != '':
         sstruct = []
         cmd.iterate(f'chain {chain} and n. CA', lambda atom: sstruct.append({'resi': int(atom.resi)}))
-        for idx, letter in list(ssec):
+        for idx, letter in enumerate(list(ssec)):
             sstruct[idx]['sec_letter'] = letter
         sstructs = get_sec_structs(sstruct)
     else:
@@ -98,24 +99,28 @@ def find_bonds(
 
         def iterate_atom(atom):
             if sstructs is not None:
-                sec_struct = filter(
-                    lambda x: x['start'] <= atom.index <= x['end'],
-                    sstructs).__next__()
-                if abs(int(atom.resi) - sec_struct['start']) < 3:
+                try:
+                    sec_struct = filter(
+                        lambda x: x['start'] <= atom.index <= x['end'],
+                        sstructs).__next__()
+                    if abs(int(atom.resi) - sec_struct['start']) < 3:
+                        skip_start = int(atom.resi) - 2
+                    else:
+                        skip_start = sec_struct['start']
+                    if abs(sec_struct['end'] - int(atom.resi)) < 3:
+                        skip_end = int(atom.resi) + 2
+                    else:
+                        skip_end = sec_struct['end']
+                except:
                     skip_start = int(atom.resi) - 2
-                else:
-                    skip_start = sec_struct['start']
-                if abs(sec_struct['end'] - int(atom.resi)) < 3:
                     skip_end = int(atom.resi) + 2
-                else:
-                    skip_end = sec_struct['end']
             else:
                 skip_start = int(atom.resi) - 2
                 skip_end = int(atom.resi) + 2
             skip_sele = f"chain {chain} and resi {skip_start}-{skip_end}"
             inner_skip = f"resi {start}-{atom.resi}"
             inner_end_sele = f"(%motif and not {inner_skip}) and {end_atom_sele} and not ({skip_sele})"
-            outer_chain_end_sele = f"(not motif) and {end_atom_sele} and chain {chain} and not {skip_sele}"
+            outer_chain_end_sele = f"(not motif) and ({end_atom_sele}) and (chain {chain}) and not ({skip_sele})"
             outer_inter_chain_end_sele = f"{end_atom_sele} and not chain {chain}"
             center_sele = f"index {atom.index}"
             cmd.select("distance",
@@ -142,13 +147,13 @@ def find_bonds(
             cmd.iterate(inner_sele, lambda atm: iter_t2(atm, f'inner_{bond.name}'))
             if need_outer:
                 cmd.iterate(
-                    outer_chain_end_sele,
+                    distances.format(outer_chain_end_sele),
                     lambda atm: iter_t2(atm,
                                         f'outer_chain_{bond.name}',
                                         False)
                 )
                 cmd.iterate(
-                    outer_inter_chain_end_sele,
+                    distances.format(outer_inter_chain_end_sele),
                     lambda atm: iter_t2(atm,
                                         f'outer_interchain_{bond.name}',
                                         False)

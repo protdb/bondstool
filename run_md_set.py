@@ -3,7 +3,6 @@ import json
 import logging
 from statistics import mean
 from pandas import json_normalize
-
 from apfid import Apfid
 from wrappers import get_from_md
 from parse_xvg_graph import xvg_to_struct

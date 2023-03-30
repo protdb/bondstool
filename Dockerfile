@@ -7,4 +7,4 @@ RUN apt-get install -y pymol
 COPY ./requirements.txt /app/requirements.txt
 RUN pip install -r /app/requirements.txt
 ADD . /app
-CMD ["python", "-u", "run_md_set.py"]
+CMD ["python", "-u", "run_structures_set.py"]

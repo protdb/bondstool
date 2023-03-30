@@ -26,7 +26,6 @@ def get_geometry(file_path, apfid: Union[Apfid, None] = None, sstruc='', need_ou
     if replace_h:
         cmd.remove('hydrogens')
         cmd.h_add()
-
     if apfid is not None:
         if apfid.start != apfid.end:
             motif_sele = f"resi {apfid.start}-{apfid.end} and chain {apfid.chain_id}"
@@ -43,7 +42,8 @@ def get_geometry(file_path, apfid: Union[Apfid, None] = None, sstruc='', need_ou
     res.update({
         "motif_len": int(cmd.count_atoms(f"({motif_sele}) and n. CA")),
         "sasa_int": float(cmd.get_area(motif_sele)),
-        "rg": float(rgyrate(motif_sele))
+        "rg": float(rgyrate(motif_sele)),
+        "fasta": ''.join(cmd.get_fastastr(motif_sele).splitlines(keepends=False)[1:])
     })
     res.update(find_bonds(
         motif_sele,
@@ -53,6 +53,8 @@ def get_geometry(file_path, apfid: Union[Apfid, None] = None, sstruc='', need_ou
     ))
     cmd.remove('not %motif')
     res['sasa_motif'] = cmd.get_area()
+    if sstruc != '':
+        res['stride'] = sstruc
     if need_outer:
         for n in bond_names:
             res[f"outer_{n}"] = res[f"outer_chain_{n}"] + res[f"outer_interchain_{n}"]
@@ -67,19 +69,21 @@ def get_geometry(file_path, apfid: Union[Apfid, None] = None, sstruc='', need_ou
     return res
 
 
-def get_all_by_apfid(apfid, pdb_path='pdbs', use_sec=True, need_outer=True):
-    apfid = Apfid(apfid=apfid)
+def get_all_by_apfid(apfid: Union[Apfid, str], pdb_path='pdbs', use_sec=True, need_outer=True):
+    if type(apfid) == str:
+        apfid = Apfid(apfid=apfid)
     if not os.path.exists(pdb_path):
         os.mkdir(pdb_path)
     target_file_path = os.path.join(pdb_path, apfid.experiment_id.lower()+'.pdb')
     model0_path = os.path.join(pdb_path, apfid.experiment_id.lower()+'_0.pdb')
-    if not os.path.exists(target_file_path):
+    if not os.path.exists(target_file_path) or os.stat(target_file_path).st_size == 0:
         with open(target_file_path, 'w') as target_file:
             target_file.write(unzip_request(f"{PDB_URL}{apfid.experiment_id.upper()}.pdb.gz").decode('utf8'))
-    if not os.path.exists(model0_path):
+    if not os.path.exists(model0_path)  or os.stat(model0_path).st_size == 0:
         model = parser.get_structure(apfid.experiment_id, target_file_path).get_models().__next__()
         pdb_io = PDBIO()
-        pdb_io.save(model0_path, model)
+        pdb_io.set_structure(model)
+        pdb_io.save(model0_path)
     if use_sec:
         sstruc = ''.join([x['sec_letter'] for x in get_parsed_stride(model0_path) if x['chain'] == apfid.chain_id])
     else:
@@ -89,7 +93,7 @@ def get_all_by_apfid(apfid, pdb_path='pdbs', use_sec=True, need_outer=True):
         apfid,
         sstruc,
         need_outer,
-        replace_h=False
+        replace_h=True
     )
 
 
