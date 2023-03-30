@@ -1,0 +1,13 @@
+docker build -t bondstool .
+screen -S bonds_sh3_set_prev.csv -dm bash -c 'docker run --rm -v /sets:/data -v /Data/pdb:/pdbs -e SETNAME=sh3_set_prev.csv bondstool; exec sh'
+screen -S bonds_sh3_set_6nmwA.csv -dm bash -c 'docker run --rm -v /sets:/data -v /Data/pdb:/pdbs -e SETNAME=sh3_set_6nmwA.csv bondstool; exec sh'
+screen -S bonds_3aa_set_1wr0A_4.csv -dm bash -c 'docker run --rm -v /sets:/data -v /Data/pdb:/pdbs -e SETNAME=3aa_set_1wr0A_4.csv bondstool; exec sh'
+screen -S bonds_sh3_set_1zlmA.csv -dm bash -c 'docker run --rm -v /sets:/data -v /Data/pdb:/pdbs -e SETNAME=sh3_set_1zlmA.csv bondstool; exec sh'
+screen -S bonds_.~lock.set_3aa.csv# -dm bash -c 'docker run --rm -v /sets:/data -v /Data/pdb:/pdbs -e SETNAME=.~lock.set_3aa.csv# bondstool; exec sh'
+screen -S bonds_sh3_set_1gcpA.csv -dm bash -c 'docker run --rm -v /sets:/data -v /Data/pdb:/pdbs -e SETNAME=sh3_set_1gcpA.csv bondstool; exec sh'
+screen -S bonds_3aa_set_1wr0A_3.csv -dm bash -c 'docker run --rm -v /sets:/data -v /Data/pdb:/pdbs -e SETNAME=3aa_set_1wr0A_3.csv bondstool; exec sh'
+screen -S bonds_3aa_set_1wr0A_2.csv -dm bash -c 'docker run --rm -v /sets:/data -v /Data/pdb:/pdbs -e SETNAME=3aa_set_1wr0A_2.csv bondstool; exec sh'
+screen -S bonds_sh3_set_1hd3A.csv -dm bash -c 'docker run --rm -v /sets:/data -v /Data/pdb:/pdbs -e SETNAME=sh3_set_1hd3A.csv bondstool; exec sh'
+screen -S bonds_sh3_set_1kq2A.csv -dm bash -c 'docker run --rm -v /sets:/data -v /Data/pdb:/pdbs -e SETNAME=sh3_set_1kq2A.csv bondstool; exec sh'
+screen -S bonds_set_3aa.csv -dm bash -c 'docker run --rm -v /sets:/data -v /Data/pdb:/pdbs -e SETNAME=set_3aa.csv bondstool; exec sh'
+screen -S bonds_3aa_set_1wr0A_1.csv -dm bash -c 'docker run --rm -v /sets:/data -v /Data/pdb:/pdbs -e SETNAME=3aa_set_1wr0A_1.csv bondstool; exec sh'
